@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project files
+via_data_challenge_2025.docx
+via_data_challenge_2025.pdf
+data/
