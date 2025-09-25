@@ -58,7 +58,7 @@
 
     - Simplifications:
 
-        - We only care about the efficiency of the actual trips and discount any inactive time between trips
+        - We only care about the efficiency of the actual trips and discount any inactivity between trips
 
         - We only care about clusters of $\geq 2$ passengers and ignore outliers/noise from HDBSCAN clustering
 
@@ -70,11 +70,13 @@
 
         - $M_v$ is directly tunable and can optimize the van/bus capacity for different regions/times
 
+        - No need to introduce inaccuracies due to biased and imprecise direct estimates of costs
+
     - Disadvantages:
 
-        - $\frac{E}{\alpha}$ depends strongly on urban density and may not accurately compare across dense and sparse regions
+        - $\frac{E}{\alpha}$ depends strongly on urban density and may not accurately compare dense and sparse regions
 
-        - Packing efficiency can only assess aggregation/configuration and is agnostic of trip distance and duration 
+        - Packing efficiency can only assess aggregation/configuration and is agnostic of trip distance/duration 
 
 - See [`02_efficiency.ipynb`](notebooks/02_efficiency.ipynb) for the complete results and analysis
 
@@ -86,7 +88,9 @@
 
 > 2. Implement your proposed method and evaluate Manhattan’s overall efficiency using yellow taxi data from the first full week (Monday-Sunday) in June 2013. Discuss how your method would scale with more data; in other words, discuss the complexity of your implementation.
 
-### Overall Efficiency (Manhattan)
+### Overall Taxi Efficiency
+
+**Manhattan, June 3rd-9th, 2013**
 
 ![Efficiency](figures/efficiency.svg)
 
@@ -94,15 +98,21 @@
 
 ### Algorithm Complexity (time/space)
 
-- HDBSCAN time $= N \log N$, where $N =$ number of passengers in a time window
+- HDBSCAN — time complexity $= N \log N$ (best case)
 
-- Number of time windows $= T$
+    - $N =$ number of passengers in a time window
 
-- Tuning time $\approx O(H$ $T$ $N \log N)$, where $H =$ number of `time_scale` values
+- Tuning — time complexity $\approx O(H$ $T$ $N \log N)$
 
-- Final inference time $\approx O(G$ $T$ $N \log N)$, where $G =$ number of `min_cluster_size` values
+    - $T =$ number of time windows
+    
+    - $H =$ number of `time_scale` values
 
-- Space complexity $\approx O(N)$
+- Final inference — time complexity $\approx O(G$ $T$ $N \log N)$
+
+    - $G =$ number of `min_cluster_size` values
+
+- Tuning & inference — space complexity $\approx O(N)$
 
 <br>
 
@@ -118,9 +128,9 @@
 
 - Across both Manhattan and the outer boroughs, packing efficiency drops every day between ~6 AM-Noon
 
-- During weekdays, the outer boroughs have efficiency peaks before and after this window (~Midnight-6 AM & ~Noon-6 PM)
+- During weekdays, the outer boroughs have efficiency peaks before and after (~Midnight-6 AM & ~Noon-6 PM)
 
-- In Manhattan, both weekday and weekend packing efficiency have broad peaks between ~Noon-6 AM
+- In Manhattan, both weekday and weekend packing efficiency have broad peaks elsewhere (between ~Noon-6 AM)
 
 <br>
 
@@ -136,4 +146,4 @@
 
 - In the outer boroughs, demand peaks while efficiency drops during the period between ~6 PM-Midnight
 
-- So, the evening rush hour represents the best opportunity to optimize efficiency/profit in these boroughs
+- The evening rush hour represents the best opportunity to optimize efficiency/profits in these boroughs
