@@ -2,12 +2,13 @@
 ### Author: Caleb C. Reagor, Ph.D.
 ### Date: September 26th, 2025
 
+---
+
 <br>
 
-```
-1. Propose a metric and/or algorithm to assess the potential efficiency of aggregating rides from many vehicles into one microtransit van/bus, given the available data. Make realistic assumptions and any necessary simplifications and state them.
-```
-### To assess the aggregation of rides into vans, I implemented an iterative density-based clustering algorithm and a complementary efficiency metric derived directly from the inferred clusters
+> 1. Propose a metric and/or algorithm to assess the potential efficiency of aggregating rides from many vehicles into one microtransit van/bus, given the available data. Make realistic assumptions and any necessary simplifications and state them.
+
+### To assess the aggregation of rides into vans, I implemented an iterative density-based clustering algorithm and an efficiency metric derived from the clusters
 
 ### Clustering Approach:
 
@@ -31,7 +32,7 @@
 
 ### Efficiency Metric
 
-- I define the efficiency $E$ of taxi rider/vehicle configurations for a given cluster $k$ as the cost per capita vs. best-case aggregation:
+- I define the efficiency $E$ of a taxi rider/vehicle configuration for a given cluster $k$ as the cost per capita vs. best-case aggregation:
 
     - $E = \frac{c_v}{c} = \frac{\text{cost per capita aggregated}}{\text{cost per capita actual}} \in (0,1]$ (ideal case)
 
@@ -57,7 +58,7 @@
 
     - Simplifications:
 
-        - We only care about the efficiency of the actual trips and discount any dead time spent between trips
+        - We only care about the efficiency of the actual trips and discount any inactive time between trips
 
         - We only care about clusters of $\geq 2$ passengers and ignore outliers/noise from HDBSCAN clustering
 
@@ -65,13 +66,13 @@
 
     - Advantages:
 
-        - $\frac{E}{\alpha} = \frac{M_v}{M}$ is a scale-free metric that can meaningfully compare between long and short trips
+        - $\frac{E}{\alpha} = \frac{M_v}{M}$ is a scale-free metric that can meaningfully compare both long and short trips
 
-        - $M_v$ is directly tunable and can optimize the van/bus capacity across different regions/times
+        - $M_v$ is directly tunable and can optimize the van/bus capacity for different regions/times
 
     - Disadvantages:
 
-        - $\frac{E}{\alpha}$ depends strongly on urban density and cannot accurately compare between dense/sparse regions
+        - $\frac{E}{\alpha}$ depends strongly on urban density and may not accurately compare across dense and sparse regions
 
         - Packing efficiency can only assess aggregation/configuration and is agnostic of trip distance and duration 
 
@@ -79,17 +80,21 @@
 
 <br>
 
-```
-2. Implement your proposed method and evaluate Manhattan’s overall efficiency using yellow taxi data from the first full week (Monday-Sunday) in June 2013. Discuss how your method would scale with more data; in other words, discuss the complexity of your implementation.
-```
+---
+
+<br>
+
+> 2. Implement your proposed method and evaluate Manhattan’s overall efficiency using yellow taxi data from the first full week (Monday-Sunday) in June 2013. Discuss how your method would scale with more data; in other words, discuss the complexity of your implementation.
 
 ### Overall Efficiency (Manhattan)
 
 ![Efficiency](figures/efficiency.svg)
 
-### Complexity (time/space)
+- Mean Efficiency $= 0.308$
 
-- HDBSCAN time $= N \log N$, where $N =$ number of passengers in time window
+### Algorithm Complexity (time/space)
+
+- HDBSCAN time $= N \log N$, where $N =$ number of passengers in a time window
 
 - Number of time windows $= T$
 
@@ -101,6 +106,34 @@
 
 <br>
 
-```
-3. Based on your implementation in the previous question, use visualizations to show how efficiency varies with time and location. Discuss any potential business implications based on your findings.
-```
+---
+
+<br>
+
+> 3. Based on your implementation in the previous question, use visualizations to show how efficiency varies with time and location. Discuss any potential business implications based on your findings.
+
+<br>
+
+![Efficiency trends](figures/efficiency_trends.svg)
+
+- Across both Manhattan and the outer boroughs, packing efficiency drops every day between ~6 AM-Noon
+
+- During weekdays, the outer boroughs have efficiency peaks before and after this window (~Midnight-6 AM & ~Noon-6 PM)
+
+- In Manhattan, both weekday and weekend packing efficiency have broad peaks between ~Noon-6 AM
+
+<br>
+
+![Efficiency vs. demand — Manhattan](figures/efficiency_vs_demand_manhattan.svg)
+
+- In Manhattan, weekday demand for taxis increases ~6 hours before efficiency, between ~6 AM-Noon
+
+- This constitutes a significant opportunity to optimize efficiency and profits during the morning rush hour
+
+<br>
+
+![Efficiency vs. demand — Outer Boroughs](figures/efficiency_vs_demand_outer_boroughs.svg)
+
+- In the outer boroughs, demand peaks while efficiency drops during the period between ~6 PM-Midnight
+
+- So, the evening rush hour represents the best opportunity to optimize efficiency/profit in these boroughs
