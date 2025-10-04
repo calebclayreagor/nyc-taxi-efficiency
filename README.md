@@ -1,6 +1,7 @@
-# Via Data Challenge
+# NYC Taxi Efficiency
 
 Author: Caleb C. Reagor, Ph.D.
+
 Date: September 26th, 2025
 
 ---
